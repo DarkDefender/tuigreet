@@ -207,15 +207,58 @@ impl Ipc {
           }
 
           ErrorType::Error => {
-            // Do not display actual message from greetd, which may contain entered information, sometimes passwords.
-            greeter.message = Some("An error was received from greetd".to_string());
-            greeter.reset(false).await;
+            if greeter.autologin {
+              // Auto login attempt failed.
+              // Do not display any message here as failing autologins is not critical
+              greeter.autologin = false;
+                self
+                  .send(Request::CreateSession {
+                    username: greeter.username.value.clone(),
+                  })
+                  .await;
+                greeter.reset(true).await;
+            } else {
+              // Do not display actual message from greetd, which may contain entered information, sometimes passwords.
+              greeter.message = Some("An error was received from greetd".to_string());
+              greeter.reset(false).await;
+            }
           }
         }
       }
     }
 
     Ok(())
+  }
+
+  pub async fn send_auto_login_request(&self, greeter: &mut Greeter) {
+    let command = greeter.session_source.command(greeter).map(str::to_string);
+
+    if let Some(command) = command {
+      greeter.done = true;
+      greeter.working = true;
+      greeter.mode = Mode::Processing;
+
+      let session = Session::get_selected(greeter);
+      let default = DefaultCommand(&command, greeter.session_source.env());
+      let (command, env) = wrap_session_command(greeter, session, &default);
+
+      #[cfg(not(debug_assertions))]
+      self.send(Request::AutoLoginSession { username: greeter.username.value.clone(), cmd: vec![command.to_string()], env }).await;
+
+      #[cfg(debug_assertions)]
+      {
+        let _ = command;
+        let _ = env;
+
+        self
+          .send(Request::AutoLoginSession {
+            username: greeter.username.value.clone(),
+            cmd: vec!["true".to_string()],
+            env: vec![],
+          })
+          .await;
+      }
+    }
   }
 
   pub async fn cancel(greeter: &mut Greeter) {

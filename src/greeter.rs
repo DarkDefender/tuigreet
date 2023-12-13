@@ -154,6 +154,8 @@ pub struct Greeter {
   pub remember_session: bool,
   // Whether last launched session for the current user should be remembered.
   pub remember_user_session: bool,
+  // Whether we should autologin with the last user and session
+  pub autologin: bool,
 
   // Style object for the terminal UI
   pub theme: Theme,
@@ -437,6 +439,7 @@ impl Greeter {
     opts.optopt("g", "greeting", "show custom text above login prompt", "GREETING");
     opts.optflag("t", "time", "display the current date and time");
     opts.optopt("", "time-format", "custom strftime format for displaying date and time", "FORMAT");
+    opts.optflag("a", "autologin", "autologin the last user at first startup");
     opts.optflag("r", "remember", "remember last logged-in username");
     opts.optflag("", "remember-session", "remember last selected session");
     opts.optflag("", "remember-user-session", "remember last selected session for each user");
@@ -559,7 +562,13 @@ impl Greeter {
     if self.config().opt_present("remember-user-session") && !self.config().opt_present("remember") {
       return Err("--remember-session must be used with --remember".into());
     }
+    if self.config().opt_present("autologin") && (!self.config().opt_present("remember-user-session") || !self.config().opt_present("remember")) {
+      eprintln!("--autologin must be used with --remember --remember-user-session");
+      print_usage(opts);
+      process::exit(1);
+    }
 
+    self.autologin = self.config().opt_present("autologin");
     self.remember = self.config().opt_present("remember");
     self.remember_session = self.config().opt_present("remember-session");
     self.remember_user_session = self.config().opt_present("remember-user-session");

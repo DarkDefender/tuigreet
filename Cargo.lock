@@ -577,8 +577,7 @@ dependencies = [
 [[package]]
 name = "greetd_ipc"
 version = "0.10.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "700d2e5bfc91a042d1d531b46de245085c6a179debedf149aa97c7ca71492078"
+source = "git+https://github.com/DarkDefender/greetd.git?branch=autologin#fa1bc19af55c27d819717937378cea5fb60bca24"
 dependencies = [
  "async-trait",
  "serde",

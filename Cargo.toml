@@ -15,7 +15,7 @@ chrono = { version = "^0.4", features = ["unstable-locales"] }
 crossterm = { version = "^0.27", features = ["event-stream"] }
 futures = "0.3"
 getopts = "^0.2"
-greetd_ipc = { version = "^0.10", features = ["tokio-codec"] }
+greetd_ipc = { git = "https://github.com/DarkDefender/greetd.git", branch = "autologin", features = ["tokio-codec"] }
 i18n-embed = { version = "^0.14", features = [
   "desktop-requester",
   "fluent-system",

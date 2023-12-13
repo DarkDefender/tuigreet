@@ -72,7 +72,18 @@ where
 
   let ipc = Ipc::new();
 
-  if greeter.remember && !greeter.username.value.is_empty() {
+  if greeter.autologin {
+      if !greeter.username.value.is_empty() {
+        keyboard::setup_last_user_session(&mut greeter).await;
+        ipc.send_auto_login_request(&mut greeter).await;
+      } else {
+        // The autologin attempt failed.
+        // Set to false here as we otherwise have some special handling of error responses.
+        greeter.autologin = false;
+      }
+  }
+
+  if greeter.remember && !greeter.autologin && !greeter.username.value.is_empty() {
     greeter.working = true;
 
     tracing::info!("creating remembered session for user {}", greeter.username.value);
