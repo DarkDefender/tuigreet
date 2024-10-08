@@ -561,23 +561,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40ecd4077b5ae9fd2e9e169b102c6c330d0605168eb0e8bf79952b256dbefffd"
 
 [[package]]
-name = "greetd-stub"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5813b31008b93f6a134866a206c5e383edb1257e85891f6b7b5e942a611d2c68"
-dependencies = [
- "getopts",
- "greetd_ipc",
- "tokio",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "greetd_ipc"
 version = "0.10.3"
-source = "git+https://github.com/DarkDefender/greetd.git?branch=autologin#fa1bc19af55c27d819717937378cea5fb60bca24"
+source = "git+https://github.com/DarkDefender/greetd.git?branch=autologin#1bdf05bb279da1e5191e57bbba4b25549c25b08c"
 dependencies = [
  "async-trait",
  "serde",
@@ -1721,7 +1707,6 @@ dependencies = [
  "crossterm",
  "futures",
  "getopts",
- "greetd-stub",
  "greetd_ipc",
  "i18n-embed",
  "i18n-embed-fl",

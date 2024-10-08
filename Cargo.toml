@@ -51,6 +51,6 @@ utmp-rs = "0.3.0"
 lto = true
 
 [dev-dependencies]
-greetd-stub = "0.3.0"
+#greetd-stub = "0.3.0"
 tempfile = "3.10.1"
 unicode-width = "0.1.12"
